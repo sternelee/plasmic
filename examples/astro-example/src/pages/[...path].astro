@@ -1,0 +1,37 @@
+---
+import { PLASMIC } from "../plasmic-init";
+import { PlasmicRootProvider, PlasmicComponent } from "@plasmicapp/loader-astro";
+
+const { path } = Astro.params;
+const pagePath = path ? `/${path}` : "/";
+
+// Try to fetch the Plasmic page
+const plasmicData = await PLASMIC.maybeFetchComponentData(pagePath);
+
+// If no page found, return 404
+if (!plasmicData) {
+  return Astro.redirect("/404");
+}
+
+// Get page metadata
+const pageMeta = plasmicData.entryCompMetas[0];
+const pageTitle = pageMeta.displayName || "Page";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <PlasmicRootProvider
+      loader={PLASMIC}
+      prefetchedData={plasmicData}
+      client:load
+    >
+      <PlasmicComponent component={pageTitle} />
+    </PlasmicRootProvider>
+  </body>
+</html>

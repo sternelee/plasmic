@@ -1,0 +1,58 @@
+---
+import { PLASMIC } from "../plasmic-init";
+import { PlasmicRootProvider, PlasmicComponent } from "@plasmicapp/loader-astro";
+
+// Fetch the page metadata for all available pages
+const pageModules = await PLASMIC.fetchPages();
+const pagePaths = pageModules.map((page) => page.path);
+
+// Try to fetch the homepage component
+const plasmicData = await PLASMIC.maybeFetchComponentData("Homepage");
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astro + Plasmic Example</title>
+  </head>
+  <body>
+    <main>
+      <h1>Welcome to Astro + Plasmic!</h1>
+      
+      {plasmicData ? (
+        <PlasmicRootProvider
+          loader={PLASMIC}
+          prefetchedData={plasmicData}
+          client:load
+        >
+          <PlasmicComponent component="Homepage" />
+        </PlasmicRootProvider>
+      ) : (
+        <div>
+          <h2>Getting Started</h2>
+          <p>To use this example:</p>
+          <ol>
+            <li>Update <code>src/plasmic-init.ts</code> with your Plasmic project ID and API token</li>
+            <li>Create a component named "Homepage" in your Plasmic project</li>
+            <li>Refresh this page to see your Plasmic content</li>
+          </ol>
+          
+          {pagePaths.length > 0 && (
+            <div>
+              <h3>Available Plasmic Pages:</h3>
+              <ul>
+                {pagePaths.map((path) => (
+                  <li key={path}>
+                    <a href={path}>{path}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </main>
+  </body>
+</html>
