@@ -40,33 +40,36 @@ export type {
 } from "@plasmicapp/loader-react";
 
 export * from "./shared-exports";
-export type { ComponentRenderData, AstroInitOptions } from "./shared-exports";
+export type {
+  ComponentRenderData,
+  AstroInitOptions,
+} from "./shared-exports";
 
 const reactMajorVersion = +React.version.split(".")[0];
 
-function filterCodeFromRenderData(data: any) {
+function filterCodeFromRenderData(
+  data: import("./shared-exports").ComponentRenderData
+) {
   if (reactMajorVersion >= 18 && !!data.bundle.bundleKey) {
     // Keep the entrypoints
     const entrypoints = new Set([
-      ...data.entryCompMetas.map((compMeta: any) => compMeta.entry),
+      ...data.entryCompMetas.map((compMeta) => compMeta.entry),
       "root-provider.js",
       ...data.bundle.projects
-        .map((x: any) => x.globalContextsProviderFileName)
-        .filter((x: any) => !!x),
+        .map((x) => x.globalContextsProviderFileName)
+        .filter((x) => !!x),
       ...data.bundle.components
-        .filter((c: any) => c.isGlobalContextProvider)
-        .map((c: any) => c.entry),
-      ...data.bundle.globalGroups.map((g: any) => g.contextFile),
+        .filter((c) => c.isGlobalContextProvider)
+        .map((c) => c.entry),
+      ...data.bundle.globalGroups.map((g) => g.contextFile),
     ]);
 
-    data.bundle.modules.browser = data.bundle.modules.browser.map(
-      (module: any) => {
-        if (module.type !== "code" || entrypoints.has(module.fileName)) {
-          return module;
-        }
-        return { ...module, code: "" };
+    data.bundle.modules.browser = data.bundle.modules.browser.map((module) => {
+      if (module.type !== "code" || entrypoints.has(module.fileName)) {
+        return module;
       }
-    );
+      return { ...module, code: "" };
+    });
   }
 }
 
@@ -88,9 +91,15 @@ export class AstroJsPlasmicComponentLoader extends PlasmicComponentLoader {
   maybeFetchComponentData(
     specs: ComponentLookupSpec[],
     opts?: FetchComponentDataOpts
-  ): Promise<any | null>;
-  maybeFetchComponentData(...specs: ComponentLookupSpec[]): Promise<any | null>;
-  async maybeFetchComponentData(...args: any[]): Promise<any | null> {
+  ): Promise<import("./shared-exports").ComponentRenderData | null>;
+  maybeFetchComponentData(
+    ...specs: ComponentLookupSpec[]
+  ): Promise<import("./shared-exports").ComponentRenderData | null>;
+  async maybeFetchComponentData(
+    ...args:
+      | [ComponentLookupSpec[], FetchComponentDataOpts?]
+      | ComponentLookupSpec[]
+  ): Promise<import("./shared-exports").ComponentRenderData | null> {
     const data = await super.maybeFetchComponentData(...args);
     const { opts } = parseFetchComponentDataArgs(...args);
     if (
@@ -103,12 +112,18 @@ export class AstroJsPlasmicComponentLoader extends PlasmicComponentLoader {
     return data;
   }
 
-  fetchComponentData(...specs: ComponentLookupSpec[]): Promise<any>;
+  fetchComponentData(
+    ...specs: ComponentLookupSpec[]
+  ): Promise<import("./shared-exports").ComponentRenderData>;
   fetchComponentData(
     specs: ComponentLookupSpec[],
     opts?: FetchComponentDataOpts
-  ): Promise<any>;
-  async fetchComponentData(...args: any[]): Promise<any> {
+  ): Promise<import("./shared-exports").ComponentRenderData>;
+  async fetchComponentData(
+    ...args:
+      | [ComponentLookupSpec[], FetchComponentDataOpts?]
+      | ComponentLookupSpec[]
+  ): Promise<import("./shared-exports").ComponentRenderData> {
     const data = await super.fetchComponentData(...args);
     const { opts } = parseFetchComponentDataArgs(...args);
     if (
@@ -125,11 +140,17 @@ function parseFetchComponentDataArgs(
   specs: ComponentLookupSpec[],
   opts?: FetchComponentDataOpts
 ): { specs: ComponentLookupSpec[]; opts?: FetchComponentDataOpts };
-function parseFetchComponentDataArgs(...specs: ComponentLookupSpec[]): {
+function parseFetchComponentDataArgs(
+  ...specs: ComponentLookupSpec[]
+): {
   specs: ComponentLookupSpec[];
   opts?: FetchComponentDataOpts;
 };
-function parseFetchComponentDataArgs(...args: any[]) {
+function parseFetchComponentDataArgs(
+  ...args:
+    | [ComponentLookupSpec[], FetchComponentDataOpts?]
+    | ComponentLookupSpec[]
+) {
   let specs: ComponentLookupSpec[];
   let opts: FetchComponentDataOpts | undefined;
   if (Array.isArray(args[0])) {
