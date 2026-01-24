@@ -3,15 +3,7 @@
 import type { InitOptions as LoaderReactInitOptions } from "@plasmicapp/loader-react";
 
 export interface AstroInitOptions extends LoaderReactInitOptions {
-  /**
-   * Optional configuration for Astro-specific features
-   */
-  astroConfig?: {
-    /**
-     * Whether to enable server-side rendering support
-     */
-    ssr?: boolean;
-  };
+  // Astro-specific options can be added here in the future
 }
 
 export type {

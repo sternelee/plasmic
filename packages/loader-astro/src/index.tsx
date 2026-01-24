@@ -154,10 +154,10 @@ function parseFetchComponentDataArgs(
   let specs: ComponentLookupSpec[];
   let opts: FetchComponentDataOpts | undefined;
   if (Array.isArray(args[0])) {
-    specs = args[0];
-    opts = args[1];
+    specs = args[0] as ComponentLookupSpec[];
+    opts = args[1] as FetchComponentDataOpts | undefined;
   } else {
-    specs = args;
+    specs = args as ComponentLookupSpec[];
     opts = undefined;
   }
   return { specs, opts };
