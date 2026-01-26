@@ -141,18 +141,14 @@ function parseFetchComponentDataArgs(
   specs: ComponentLookupSpec[];
   opts?: FetchComponentDataOpts;
 };
-function parseFetchComponentDataArgs(
-  ...args:
-    | [ComponentLookupSpec[], FetchComponentDataOpts?]
-    | ComponentLookupSpec[]
-) {
+function parseFetchComponentDataArgs(...args: any[]) {
   let specs: ComponentLookupSpec[];
   let opts: FetchComponentDataOpts | undefined;
   if (Array.isArray(args[0])) {
-    specs = args[0] as ComponentLookupSpec[];
-    opts = args[1] as FetchComponentDataOpts | undefined;
+    specs = args[0];
+    opts = args[1];
   } else {
-    specs = args as ComponentLookupSpec[];
+    specs = args;
     opts = undefined;
   }
   return { specs, opts };
