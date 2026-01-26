@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.types.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@plasmicapp/loader-react": ["../loader-react/src"],
+      "@plasmicapp/loader-core": ["../loader-core/src"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "src/**/*.spec.ts", "src/**/__tests__"]
+}
