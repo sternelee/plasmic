@@ -93,7 +93,7 @@ const plasmicData = await PLASMIC.maybeFetchComponentData(pagePath);
 
 // If no Plasmic page is found, return 404
 if (!plasmicData) {
-  return Astro.redirect("/404");
+  return new Response(null, { status: 404 });
 }
 
 // Extract metadata for SEO

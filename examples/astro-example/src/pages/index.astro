@@ -44,7 +44,7 @@ const plasmicData = await PLASMIC.maybeFetchComponentData("Homepage");
               <h3>Available Plasmic Pages:</h3>
               <ul>
                 {pagePaths.map((path) => (
-                  <li key={path}>
+                  <li>
                     <a href={path}>{path}</a>
                   </li>
                 ))}

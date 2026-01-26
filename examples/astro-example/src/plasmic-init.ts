@@ -4,15 +4,16 @@ import { initPlasmicLoader } from "@plasmicapp/loader-astro";
 // Get these values from your Plasmic project settings at:
 // https://studio.plasmic.app/projects/YOURPROJECTID/settings
 
-// You can also use environment variables with Astro:
-// id: import.meta.env.PLASMIC_PROJECT_ID,
-// token: import.meta.env.PLASMIC_PROJECT_TOKEN,
+// Recommended: Use environment variables with Astro
+// Create a .env file and add:
+// PLASMIC_PROJECT_ID=your_project_id
+// PLASMIC_PROJECT_TOKEN=your_project_token
 
 export const PLASMIC = initPlasmicLoader({
   projects: [
     {
-      id: "PLASMIC_PROJECT_ID", // REPLACE THIS
-      token: "PLASMIC_PROJECT_TOKEN", // REPLACE THIS
+      id: import.meta.env.PLASMIC_PROJECT_ID ?? "YOUR_PROJECT_ID_HERE",
+      token: import.meta.env.PLASMIC_PROJECT_TOKEN ?? "YOUR_PROJECT_TOKEN_HERE",
     },
   ],
   preview: false,

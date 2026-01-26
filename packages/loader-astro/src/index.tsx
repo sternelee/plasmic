@@ -7,6 +7,7 @@ import {
   extractPlasmicQueryData as internalExtractPlasmicQueryData,
 } from "@plasmicapp/loader-react";
 import * as React from "react";
+import type { ComponentRenderData, AstroInitOptions } from "./shared-exports";
 
 // Re-export commonly used components and utilities from loader-react
 export {
@@ -40,16 +41,10 @@ export type {
 } from "@plasmicapp/loader-react";
 
 export * from "./shared-exports";
-export type {
-  ComponentRenderData,
-  AstroInitOptions,
-} from "./shared-exports";
 
 const reactMajorVersion = +React.version.split(".")[0];
 
-function filterCodeFromRenderData(
-  data: import("./shared-exports").ComponentRenderData
-) {
+function filterCodeFromRenderData(data: ComponentRenderData) {
   if (reactMajorVersion >= 18 && !!data.bundle.bundleKey) {
     // Keep the entrypoints
     const entrypoints = new Set([
@@ -91,15 +86,15 @@ export class AstroJsPlasmicComponentLoader extends PlasmicComponentLoader {
   maybeFetchComponentData(
     specs: ComponentLookupSpec[],
     opts?: FetchComponentDataOpts
-  ): Promise<import("./shared-exports").ComponentRenderData | null>;
+  ): Promise<ComponentRenderData | null>;
   maybeFetchComponentData(
     ...specs: ComponentLookupSpec[]
-  ): Promise<import("./shared-exports").ComponentRenderData | null>;
+  ): Promise<ComponentRenderData | null>;
   async maybeFetchComponentData(
     ...args:
       | [ComponentLookupSpec[], FetchComponentDataOpts?]
       | ComponentLookupSpec[]
-  ): Promise<import("./shared-exports").ComponentRenderData | null> {
+  ): Promise<ComponentRenderData | null> {
     const data = await super.maybeFetchComponentData(...args);
     const { opts } = parseFetchComponentDataArgs(...args);
     if (
@@ -114,16 +109,16 @@ export class AstroJsPlasmicComponentLoader extends PlasmicComponentLoader {
 
   fetchComponentData(
     ...specs: ComponentLookupSpec[]
-  ): Promise<import("./shared-exports").ComponentRenderData>;
+  ): Promise<ComponentRenderData>;
   fetchComponentData(
     specs: ComponentLookupSpec[],
     opts?: FetchComponentDataOpts
-  ): Promise<import("./shared-exports").ComponentRenderData>;
+  ): Promise<ComponentRenderData>;
   async fetchComponentData(
     ...args:
       | [ComponentLookupSpec[], FetchComponentDataOpts?]
       | ComponentLookupSpec[]
-  ): Promise<import("./shared-exports").ComponentRenderData> {
+  ): Promise<ComponentRenderData> {
     const data = await super.fetchComponentData(...args);
     const { opts } = parseFetchComponentDataArgs(...args);
     if (
@@ -168,13 +163,11 @@ function parseFetchComponentDataArgs(
  * @param opts - Configuration options
  * @returns Configured PlasmicComponentLoader instance
  */
-export function initPlasmicLoader(
-  opts: import("./shared-exports").AstroInitOptions
-) {
+export function initPlasmicLoader(opts: AstroInitOptions) {
   const loader = new AstroJsPlasmicComponentLoader(
     new InternalPlasmicComponentLoader({
       ...opts,
-      platform: "astro",
+      platform: "astro" as any,
     })
   );
 
